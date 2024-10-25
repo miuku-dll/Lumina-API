@@ -24,7 +24,3 @@ Lumina Virtual Input Library is a powerful, low-level C# library for simulating 
 
 - **🚀 Easy-to-Use Interface**
   - Simple API for quick integration
-
-## 📦 Installation
-
-Install Lumina Virtual Input Library via NuGet:

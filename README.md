@@ -69,10 +69,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you encounter any issues or have questions, please [open an issue](https://github.com/miuku-dll/Lumina-Virtual-Input-Library/issues) on our GitHub repository.
 
-## Acknowledgements
-
-- [List any third-party libraries or resources you've used]
-
 ---
 
 Developed with ❤️ by miuku-dll

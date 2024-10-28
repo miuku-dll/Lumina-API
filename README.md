@@ -63,7 +63,7 @@ For detailed documentation, examples, and API references, please visit our [Wiki
 
 ## Contributing
 
-We welcome contributions! (so feel free to create a pull req
+We welcome contributions! (so feel free to create a pull request)
 
 ## License
 

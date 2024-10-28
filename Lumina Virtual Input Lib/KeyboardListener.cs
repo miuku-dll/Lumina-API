@@ -19,6 +19,33 @@ namespace Lumina_Virtual_Input_Lib
 
         private static readonly int[] IgnoredKeys = { 0x01, 0x02, 0x04, 0x05, 0x06, 0x5B, 0x5C };
 
+        private static readonly Dictionary<int, string> SpecialKeys = new Dictionary<int, string>
+        {
+            { 0x08, "BACKSPACE" },
+            { 0x09, "TAB" },
+            { 0x0D, "ENTER" },
+            { 0x10, "SHIFT" },
+            { 0x11, "CTRL" },
+            { 0x12, "ALT" },
+            { 0x13, "PAUSE" },
+            { 0x14, "CAPSLOCK" },
+            { 0x1B, "ESC" },
+            { 0x20, "SPACE" },
+            { 0x21, "PAGEUP" },
+            { 0x22, "PAGEDOWN" },
+            { 0x23, "END" },
+            { 0x24, "HOME" },
+            { 0x25, "LEFT" },
+            { 0x26, "UP" },
+            { 0x27, "RIGHT" },
+            { 0x28, "DOWN" },
+            { 0x2C, "PRINTSCREEN" },
+            { 0x2D, "INSERT" },
+            { 0x2E, "DELETE" },
+            { 0x90, "NUMLOCK" },
+            { 0x91, "SCROLLLOCK" }
+        };
+
         public event EventHandler<string>? OutputGenerated;
 
         public void StartListening()
@@ -45,7 +72,6 @@ namespace Lumina_Virtual_Input_Lib
             {
                 for (int i = 0; i < 256; i++)
                 {
-                    // Skippaa ignoratut nappaimet inshallah
                     if (Array.IndexOf(IgnoredKeys, i) != -1)
                         continue;
 
@@ -67,12 +93,18 @@ namespace Lumina_Virtual_Input_Lib
                     keyStates[i] = isKeyDown;
                 }
 
-                Thread.Sleep(10); // prossun saastaminen ong
+                Thread.Sleep(10);
             }
         }
 
         private void RecordEvent(int keyCode, string eventType)
         {
+            string keyName = GetKeyName(keyCode);
+            if (string.IsNullOrEmpty(keyName))
+            {
+                return; // Don't record events for unknown keys
+            }
+
             long currentTime = stopwatch.ElapsedMilliseconds;
             long delay = currentTime - lastEventTime;
 
@@ -82,7 +114,6 @@ namespace Lumina_Virtual_Input_Lib
                 output += $"DELAY : {delay}\n";
             }
 
-            string keyName = GetKeyName(keyCode);
             output += $"Keyboard : {keyName} : {eventType}";
 
             OutputGenerated?.Invoke(this, output);
@@ -92,14 +123,18 @@ namespace Lumina_Virtual_Input_Lib
 
         private string GetKeyName(int keyCode)
         {
-            if (keyCode == 0x20) // Space key
+            if (SpecialKeys.TryGetValue(keyCode, out string? specialKey))
             {
-                return "SPACE";
+                return specialKey;
             }
-            else
+            else if (keyCode >= 0x30 && keyCode <= 0x39 || keyCode >= 0x41 && keyCode <= 0x5A)
             {
+                // Numbers and letters
                 return ((char)keyCode).ToString();
             }
+
+            // Return an empty string for any other keys
+            return string.Empty;
         }
     }
 }

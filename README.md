@@ -9,7 +9,7 @@ Lumina Virtual Input Library is a powerful .NET library for programmatic mouse a
 - **Mouse Simulation**
   - Cursor movement with multiple interpolation options
   - Left and right click simulation
-  - Customizable movement paths (linear, bezier)
+  - Customizable movement paths (linear, bezier, Cubic Ease, Ease In, Ease Out, SineWave, Cubic Interpolation, Cardinal Spline, Hermite Spline, Catmull Rom Spline)
 
 - **Keyboard Simulation**
   - Key press and release events

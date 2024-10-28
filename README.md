@@ -47,7 +47,7 @@ keyboard.SendKey(0x41, true); // Release 'A'
 
 ## Documentation
 
-For detailed documentation, examples, and API references, please visit our [Wiki](https://github.com/miuku-dll/Lumina-Virtual-Input-Library/wiki).
+For detailed documentation, examples, and API references, please visit our [Wiki](https://github.com/miuku-dll/Lumina-API/wiki).
 
 ## Use Cases
 
@@ -63,7 +63,7 @@ For detailed documentation, examples, and API references, please visit our [Wiki
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for more details.
+We welcome contributions! (so feel free to create a push req
 
 ## License
 

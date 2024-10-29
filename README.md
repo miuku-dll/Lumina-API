@@ -6,7 +6,7 @@
 
 ## Overview
 
-Lumina Virtual Input Library is a powerful .NET library for programmatic mouse and keyboard input simulation. Designed for developers who need precise control over input operations, this library offers a high-level API to automate mouse movements, clicks, and keyboard inputs across Windows applications.
+Lumina API is a powerful .NET library for virtual mouse and keyboard input simulation. Designed for developers who need precise control over input operations, this library offers a high-level API to automate mouse movements, clicks, and keyboard inputs across Windows applications.
 
 ## Features
 

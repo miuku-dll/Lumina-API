@@ -55,6 +55,11 @@ namespace Lumina_Virtual_Input_Lib
 
         #endregion
 
+        public void MoveTo(int x, int y)
+        {
+            SendMouseInput(x, y);
+        }
+
         public void MoveTo(int x, int y, MovementType type, double duration)
         {
             GetCursorPos(out POINT start);

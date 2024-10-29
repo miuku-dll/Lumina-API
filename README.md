@@ -1,4 +1,8 @@
-# Lumina Virtual Input Library
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/ad171ca0-fd6f-472d-a865-35b369060580" alt="Logo" width="200"/>
+</div>
+
+
 
 ## Overview
 
@@ -9,7 +13,7 @@ Lumina Virtual Input Library is a powerful .NET library for programmatic mouse a
 - **Mouse Simulation**
   - Cursor movement with multiple interpolation options
   - Left and right click simulation
-  - Customizable movement paths (linear, bezier)
+  - Customizable movement paths (linear, bezier, Cubic Ease, Ease In, Ease Out, SineWave, Cubic Interpolation, Cardinal Spline, Hermite Spline, Catmull Rom Spline)
 
 - **Keyboard Simulation**
   - Key press and release events
@@ -43,7 +47,7 @@ keyboard.SendKey(0x41, true); // Release 'A'
 
 ## Documentation
 
-For detailed documentation, examples, and API references, please visit our [Wiki](https://github.com/miuku-dll/Lumina-Virtual-Input-Library/wiki).
+For detailed documentation, examples, and API references, please visit our [Wiki](https://github.com/miuku-dll/Lumina-API/wiki).
 
 ## Use Cases
 
@@ -59,7 +63,7 @@ For detailed documentation, examples, and API references, please visit our [Wiki
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for more details.
+We welcome contributions! (so feel free to create a pull request)
 
 ## License
 

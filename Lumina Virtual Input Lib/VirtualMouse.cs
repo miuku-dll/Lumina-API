@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace Lumina_Virtual_Input_Lib
@@ -54,10 +55,12 @@ namespace Lumina_Virtual_Input_Lib
 
         #endregion
 
-        public void MoveTo(int x, int y, MovementType type)
+        public void MoveTo(int x, int y, MovementType type, double duration)
         {
             GetCursorPos(out POINT start);
             int steps = 100;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
             switch (type)
             {
@@ -76,21 +79,34 @@ namespace Lumina_Virtual_Input_Lib
                         int currentX = (int)(start.X + (x - start.X) * factor);
                         int currentY = (int)(start.Y + (y - start.Y) * factor);
                         SendMouseInput(currentX, currentY);
-                        System.Threading.Thread.Sleep(1);
+                        WaitForNextStep(sw, duration, steps, i);
                     }
                     break;
                 case MovementType.CubicInterpolation:
-                    CubicInterpolationMove(start.X, start.Y, x, y, steps);
+                    CubicInterpolationMove(start.X, start.Y, x, y, steps, duration);
                     break;
                 case MovementType.CardinalSpline:
-                    CardinalSplineMove(start.X, start.Y, x, y, steps);
+                    CardinalSplineMove(start.X, start.Y, x, y, steps, duration);
                     break;
                 case MovementType.HermiteSpline:
-                    HermiteSplineMove(start.X, start.Y, x, y, steps);
+                    HermiteSplineMove(start.X, start.Y, x, y, steps, duration);
                     break;
                 case MovementType.CatmullRomSpline:
-                    CatmullRomSplineMove(start.X, start.Y, x, y, steps);
+                    CatmullRomSplineMove(start.X, start.Y, x, y, steps, duration);
                     break;
+            }
+
+            sw.Stop();
+        }
+
+        private void WaitForNextStep(Stopwatch sw, double duration, int totalSteps, int currentStep)
+        {
+            double elapsedSeconds = sw.Elapsed.TotalSeconds;
+            double targetSeconds = duration * (currentStep + 1) / totalSteps;
+            int sleepTime = (int)((targetSeconds - elapsedSeconds) * 1000);
+            if (sleepTime > 0)
+            {
+                System.Threading.Thread.Sleep(sleepTime);
             }
         }
 
@@ -132,10 +148,12 @@ namespace Lumina_Virtual_Input_Lib
             }
         }
 
-        private void CubicInterpolationMove(int startX, int startY, int targetX, int targetY, int steps)
+        private void CubicInterpolationMove(int startX, int startY, int targetX, int targetY, int steps, double duration)
         {
             POINT control1 = new POINT { X = (2 * startX + targetX) / 3, Y = (2 * startY + targetY) / 3 };
             POINT control2 = new POINT { X = (startX + 2 * targetX) / 3, Y = (startY + 2 * targetY) / 3 };
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
             for (int i = 0; i <= steps; i++)
             {
@@ -144,14 +162,18 @@ namespace Lumina_Virtual_Input_Lib
                 int x = (int)((1 - factor) * startX + factor * targetX);
                 int y = (int)((1 - factor) * startY + factor * targetY);
                 SendMouseInput(x, y);
-                System.Threading.Thread.Sleep(1);
+                WaitForNextStep(sw, duration, steps, i);
             }
+
+            sw.Stop();
         }
 
-        private void CardinalSplineMove(int startX, int startY, int targetX, int targetY, int steps)
+        private void CardinalSplineMove(int startX, int startY, int targetX, int targetY, int steps, double duration)
         {
             POINT control1 = new POINT { X = startX + (targetX - startX) / 3, Y = startY + (targetY - startY) / 3 };
             POINT control2 = new POINT { X = startX + 2 * (targetX - startX) / 3, Y = startY + 2 * (targetY - startY) / 3 };
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
             for (int i = 0; i <= steps; i++)
             {
@@ -161,14 +183,18 @@ namespace Lumina_Virtual_Input_Lib
                 int x = (int)(startX * (2 * t3 - 3 * t2 + 1) + control1.X * (-2 * t3 + 3 * t2) + control2.X * (t3 - 2 * t2 + t) + targetX * (t3 - t2));
                 int y = (int)(startY * (2 * t3 - 3 * t2 + 1) + control1.Y * (-2 * t3 + 3 * t2) + control2.Y * (t3 - 2 * t2 + t) + targetY * (t3 - t2));
                 SendMouseInput(x, y);
-                System.Threading.Thread.Sleep(1);
+                WaitForNextStep(sw, duration, steps, i);
             }
+
+            sw.Stop();
         }
 
-        private void HermiteSplineMove(int startX, int startY, int targetX, int targetY, int steps)
+        private void HermiteSplineMove(int startX, int startY, int targetX, int targetY, int steps, double duration)
         {
             POINT tangent1 = new POINT { X = (targetX - startX) / 2, Y = (targetY - startY) / 2 };
             POINT tangent2 = new POINT { X = (startX - targetX) / 2, Y = (startY - targetY) / 2 };
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
             for (int i = 0; i <= steps; i++)
             {
@@ -182,16 +208,20 @@ namespace Lumina_Virtual_Input_Lib
                 int x = (int)(startX * h1 + targetX * h2 + tangent1.X * h3 + tangent2.X * h4);
                 int y = (int)(startY * h1 + targetY * h2 + tangent1.Y * h3 + tangent2.Y * h4);
                 SendMouseInput(x, y);
-                System.Threading.Thread.Sleep(1);
+                WaitForNextStep(sw, duration, steps, i);
             }
+
+            sw.Stop();
         }
 
-        private void CatmullRomSplineMove(int startX, int startY, int targetX, int targetY, int steps)
+        private void CatmullRomSplineMove(int startX, int startY, int targetX, int targetY, int steps, double duration)
         {
             POINT p0 = new POINT { X = startX - (targetX - startX), Y = startY - (targetY - startY) };
             POINT p1 = new POINT { X = startX, Y = startY };
             POINT p2 = new POINT { X = targetX, Y = targetY };
             POINT p3 = new POINT { X = targetX + (targetX - startX), Y = targetY + (targetY - startY) };
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
             for (int i = 0; i <= steps; i++)
             {
@@ -201,9 +231,12 @@ namespace Lumina_Virtual_Input_Lib
                 int x = (int)(0.5 * ((2 * p1.X) + (-p0.X + p2.X) * t + (2 * p0.X - 5 * p1.X + 4 * p2.X - p3.X) * t2 + (-p0.X + 3 * p1.X - 3 * p2.X + p3.X) * t3));
                 int y = (int)(0.5 * ((2 * p1.Y) + (-p0.Y + p2.Y) * t + (2 * p0.Y - 5 * p1.Y + 4 * p2.Y - p3.Y) * t2 + (-p0.Y + 3 * p1.Y - 3 * p2.Y + p3.Y) * t3));
                 SendMouseInput(x, y);
-                System.Threading.Thread.Sleep(1);
+                WaitForNextStep(sw, duration, steps, i);
             }
+
+            sw.Stop();
         }
+
 
         public void Click(MouseButton button)
         {

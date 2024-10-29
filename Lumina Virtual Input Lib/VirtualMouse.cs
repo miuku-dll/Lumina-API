@@ -5,6 +5,9 @@ namespace Lumina_Virtual_Input_Lib
 {
     public class VirtualMouse
     {
+
+        #region Imports etc
+
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(out POINT lpPoint);
 
@@ -25,6 +28,8 @@ namespace Lumina_Virtual_Input_Lib
         private const uint MOUSEEVENTF_LEFTUP = 0x0004;
         private const uint MOUSEEVENTF_RIGHTDOWN = 0x0008;
         private const uint MOUSEEVENTF_RIGHTUP = 0x0010;
+
+        #endregion
 
         public void MoveTo(int x, int y, MovementType type)
         {
@@ -65,6 +70,8 @@ namespace Lumina_Virtual_Input_Lib
                     break;
             }
         }
+
+        #region Movement Types
 
         private void LinearMove(int targetX, int targetY)
         {
@@ -230,6 +237,8 @@ namespace Lumina_Virtual_Input_Lib
                 System.Threading.Thread.Sleep(1);
             }
         }
+
+        #endregion
 
         public void Click(MouseButton button)
         {

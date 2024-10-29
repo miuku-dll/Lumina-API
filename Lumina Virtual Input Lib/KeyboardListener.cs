@@ -8,6 +8,9 @@ namespace Lumina_Virtual_Input_Lib
 {
     public class KeyboardListener
     {
+
+#region Data & modf & imports
+
         [DllImport("user32.dll")]
         private static extern short GetAsyncKeyState(int vKey);
 
@@ -47,6 +50,8 @@ namespace Lumina_Virtual_Input_Lib
         };
 
         public event EventHandler<string>? OutputGenerated;
+
+        #endregion
 
         public void StartListening()
         {
@@ -102,7 +107,7 @@ namespace Lumina_Virtual_Input_Lib
             string keyName = GetKeyName(keyCode);
             if (string.IsNullOrEmpty(keyName))
             {
-                return; // Don't record events for unknown keys
+                return; 
             }
 
             long currentTime = stopwatch.ElapsedMilliseconds;
@@ -129,11 +134,8 @@ namespace Lumina_Virtual_Input_Lib
             }
             else if (keyCode >= 0x30 && keyCode <= 0x39 || keyCode >= 0x41 && keyCode <= 0x5A)
             {
-                // Numbers and letters
                 return ((char)keyCode).ToString();
             }
-
-            // Return an empty string for any other keys
             return string.Empty;
         }
     }
